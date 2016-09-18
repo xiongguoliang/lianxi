@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        div{
+            position:relative;
+            left: 0;
+            height: 200px;
+            width: 200px;
+            background-color: red;
+            display: block;
+        }
+    </style>
+    <script src="jquery.min.js">
+    </script>
+</head>
+<body>
+<button>按钮</button>
+<div></div>
+
+<script>
+    $("button").click(function () {
+        setTimeout(function () {
+            $("div").animate({left:'200px'},3000)
+        },1000)
+//        clearTimeout();
+        setTimeout(function () {
+            $("div").animate({top:"200px"},3000)
+        },5000)
+    })
+</script>
+</body>
+</html>

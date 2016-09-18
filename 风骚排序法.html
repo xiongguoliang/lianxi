@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="a"></div>
+<script>
+    var arr=[
+        {price:1201,name:12334},
+        {price:1210,name:23444},
+        {price:1223,name:123434},
+        {price:1322,name:132444},
+        {price:1200,name:122334},
+
+    ]
+
+    function keysrt(key,desc) {
+
+
+    return function(a,b){
+
+
+        return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);
+
+
+    }
+
+}
+    arr.sort(keysrt('price',true));
+
+//使用:
+
+
+//        var ary=[{id:1,name:"b"},{id:2,name:"b"}];
+
+
+
+
+//arr.sort(keysrt('name',false));
+//
+//arr.sort(keysrt('id',false));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>无序列表排序</title>
+
+    <script>
+
+        window.onload = function()
+
+        {
+
+            document.getElementsByTagName('button')[0].addEventListener('click',function()
+
+            {
+
+                var LI = Array.prototype.slice.call(document.getElementsByTagName('li')),UL = document.getElementsByTagName('ul')[0];
+
+                LI.sort(function(A,B){return A.childNodes[0].innerText - B.childNodes[0].innerText})
+
+                for (;LI.length;) UL.appendChild(LI.shift())
+
+            })
+
+        }
+
+    </script>
+
+</head>
+
+<body>
+
+<ul>
+
+    <li><span>19</span></li>
+
+    <li><span>450</span></li>
+
+    <li><span>801</span></li>
+
+    <li><span>114</span></li>
+
+    <li><span>514</span></li>
+
+    <li><span>233</span></li>
+
+</ul>
+
+<button>Click to sort</button>
+
+</body>
+
+</html>

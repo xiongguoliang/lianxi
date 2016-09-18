@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    var arr=["a","b","c","d"]
+
+console.log(arr.shift());
+    function getindex(n) {
+
+        for (var i = 0; i <arr.length; i++) {
+            if(n===arr[i]){
+                return i;
+            }
+
+        }
+
+    }
+    console.log(getindex("c"));
+</script>
+</body>
+</html>

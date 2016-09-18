@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="a"></div>
+<script>
+
+    var data={"航班1":12,"航班2":11,"航班3":23};
+    var res=[];
+
+
+    for(var key in data){
+       value=data[key];
+        console.log(value);
+        res+="<p>航班："+key+"  price:"+data[key]+"</p>";
+
+    };
+
+    document.getElementById("a").innerHTML=res;
+
+
+
+</script>
+
+</body>
+</html>

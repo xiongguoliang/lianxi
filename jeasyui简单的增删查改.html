@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="http://www.w3cschool.cc/try/jeasyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="http://www.w3cschool.cc/try/jeasyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="http://www.w3cschool.cc/try/jeasyui/demo/demo.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.min.js"></script>
+    <script type="text/javascript" src="http://www.w3cschool.cc/try/jeasyui/jquery.easyui.min.js"></script>
+</head>
+
+
+<body>
+<!--1、定义一个表格-->
+
+<table id="dg" class="easyui-datagrid" title="DataGrid Complex Toolbar" style="width:700px;height:250px"
+       data-options="rownumbers:true,singleSelect:true,url:'{:U(read)}',method:'get',toolbar:'#tb'">
+    <thead>
+    <tr>
+        <th data-options="field:'ID',width:80,align:'center'">ID</th>
+        <th data-options="field:'Product',width:100">Product</th>
+        <th data-options="field:'Content',width:500,align:'center'">Content</th>
+    </tr>
+    </thead>
+</table>
+
+<!--　　class="easyui-datagrid"是easyui里面自定义的格式，data-options用来初始化属性，这里面的属性包括rownumbers显示行数，singleSelect表示行的选中状态；-->
+<!--url:'{U(read)}'首先，ThinkPHP的U方法（参考：http://www.thinkphp.cn/info/132.html）用来完成对URL地址的组装，在模板中的调用采用 {:U('地址', '参数'…)} 的方式，其次，EasyUI采用的数据格式是json,控制器里面的read方法输出一个json格式的数据。toolbar:'#tb'这个是表格的工具栏，就是增加、删除和修改。-->
+<!--定义表格的工具栏如下：-->
+<div id="tb" style="padding:2px 5px;">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onClick="addPro()">增加</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editPro()">编辑</a>
+    <a href="javascrtpt:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removePro()">删除</a>
+</div>
+<!--注意：这里面的id要和 toolbar：'#tb' 相对应；-->
+<!--2、点击增加和修改的时候要弹出一个对话框，代码如下：-->
+<!--the page of dialog-->
+<div id="dl" class="easyui-dialog" style="width:400px;height:280px;padding:10px 20px" closed="true" footer="ft" buttons="#dlg-buttons">
+    <div class="ftitle">Information</div>
+    <form id="am" method="post" novalidate >
+        Product:<input type="text" name="Product" class="easyui-validatebox" required="true"/></br>
+        Content:<Textarea name="Content" rows="5" cols="45"></Textarea></br>
+    </form>
+</div>
+<!--class='easyui-dialog'定义了一个对话框，因为要和后台交互，在这个对话框里面装了一个form，里面的input元素有些需要进行验证，
+required="true"表示必须填写元素-->
+<!--class="easyui-validatebox"定义了验证失败后的提示，buttons="#dlg-buttons"表示这个对话框下面的两个确认，取消按钮。novalidate表示不验证。-->
+<!--对话框中的按钮：-->
+<div id="dlg-buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="savePro()">Save</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
+       onclick="javascript:$('#dl').dialog('close')">Cancel</a>
+</div>
+<!--3、页面js函数-->
+<script type="text/javascript">
+    var url;
+    function addPro(){
+        $('#dl').dialog('open').dialog('setTitle','New Information');
+        $('#am').form('clear');
+        url = '__URL__/insert';
+    }
+    function editPro(){
+        var row = $("#dg").datagrid("getSelected");//取得选中行
+        if(row){
+            $("#dl").dialog("open").dialog("setTitle","Change Information");
+            $("#am").form("load",row);
+            url = '__URL__/update?ID='+row.ID;//为update方法准备访问url，注意是全局变量
+        }
+    }
+
+    function savePro(){
+        $('#am').form('submit',{
+            url: url,
+            onSubmit: function(){
+                return $(this).form('validate');
+            },
+            success: function(result){
+                var result = eval('('+result+')');
+                if (result.success){
+                    $('#dl').dialog('close');        // close the dialog
+                    $('#dg').datagrid('reload');    // reload the user data
+                } else {
+                    $.messager.show({
+                        title: 'Error',
+                        msg: result.msg
+                    });
+                }
+            }
+        });
+    }
+
+    function removePro()
+    {
+        var row = $('#dg').datagrid('getSelected');
+        if (row){
+            $.messager.confirm('Confirm','Are you sure you want to remove this row?',function(r){
+                if (r){
+                    $.post('__URL__/delete',{ID:row.ID},function(result){
+                        if (result.success){
+                            $('#dg').datagrid('reload');    // reload the user data
+                        } else {
+                            $.messager.show({    // show error message
+                                title: 'Error',
+                                msg: result.msg
+                            });
+                        }
+                    },'json');
+                }
+            });
+        }
+    }
+</script>
+<!--JS还不是很会，所以参考了网上的代码。 $.messager.show是EasyUI提供的消息提示框（参考：http://www.jeasyui.net/demo/371.html），
+可以在屏幕右下角显示一个消息窗口。$.messager.confirm是交互式消息，弹出一个消息确认框。var row = $("#dg").datagrid("getSelected");
+是取得选中行，而row.ID可以取得选中行的数据，其中ID是由field:'ID'决定。-->
+</body>
+</html>
